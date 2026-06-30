@@ -48,7 +48,7 @@ def get_series_keyboard():
     builder = InlineKeyboardBuilder()
     series = db.get_all_series()
     for s in series:
-        builder.button(text=s["name"], callback_data=f"series:{s['id']}")
+        builder.button(text=f"✨ {s['name']}", callback_data=f"series:{s['id']}")
     builder.adjust(2)
     return builder.as_markup()
 
@@ -57,8 +57,10 @@ def get_series_keyboard():
 async def start_cmd(message: types.Message):
     user_id = message.from_user.id
     welcome = (
-        "Assalomu alaykum! Turk seriallari botiga xush kelibsiz.\n\n"
-        "Bizdagi turk seriallari ro'yxati:"
+        "✨ *BEST TURKISH DRAMMAS* ✨\n\n"
+        "Assalomu alaykum, hurmatli tomoshabin! 👑\n"
+        "Eng sara va mashhur turk seriallari olamiga xush kelibsiz. 🍿\n\n"
+        "👇 Quyidagi ro'yxatdan o'zingizga ma'qul serialni tanlang:"
     )
     if db.is_admin(user_id):
         welcome += (
@@ -67,12 +69,12 @@ async def start_cmd(message: types.Message):
             "• /add\\_admin <user_id> - Yangi admin qo'shish"
         )
     # Send welcome text and show the inline series keyboard directly!
-    await message.reply(welcome, reply_markup=get_series_keyboard())
+    await message.reply(welcome, reply_markup=get_series_keyboard(), parse_mode="Markdown")
 
 # Handle Reply Button
 @dp.message(F.text == "🎬 Seriallar")
 async def show_series_menu(message: types.Message):
-    await message.reply("Bizdagi turk seriallari ro'yxati:", reply_markup=get_series_keyboard())
+    await message.reply("✨ *Best Turkish Drammas* seriallari ro'yxati:", reply_markup=get_series_keyboard(), parse_mode="Markdown")
 
 # Handle Series Select (Now prompts for language)
 @dp.callback_query(F.data.startswith("series:"))
@@ -89,7 +91,7 @@ async def select_series(callback: types.CallbackQuery):
     builder.adjust(2)
     
     await callback.message.edit_text(
-        f"🎬 *{series_name}* seriali uchun tilni tanlang:",
+        f"👑 *{series_name}* seriali\n\n🌐 Iltimos, tomosha qilish tilini tanlang:",
         reply_markup=builder.as_markup(),
         parse_mode="Markdown"
     )
@@ -109,7 +111,7 @@ async def back_to_langs(callback: types.CallbackQuery):
     builder.adjust(2)
     
     await callback.message.edit_text(
-        f"🎬 *{series_name}* seriali uchun tilni tanlang:",
+        f"👑 *{series_name}* seriali\n\n🌐 Iltimos, tomosha qilish tilini tanlang:",
         reply_markup=builder.as_markup(),
         parse_mode="Markdown"
     )
@@ -129,7 +131,7 @@ async def select_language(callback: types.CallbackQuery):
         builder = InlineKeyboardBuilder()
         builder.button(text="⬅️ Orqaga", callback_data=f"back_to_langs:{series_id}")
         await callback.message.edit_text(
-            f"🎬 *{series_name}* seriali uchun *{language}* tilida hali qismlar joylanmagan.",
+            f"⚠️ *{series_name}* seriali uchun *{language}* tilida hali qismlar joylanmagan.",
             reply_markup=builder.as_markup(),
             parse_mode="Markdown"
         )
@@ -137,12 +139,12 @@ async def select_language(callback: types.CallbackQuery):
         
     builder = InlineKeyboardBuilder()
     for ep in episodes:
-        builder.button(text=f"{ep['episode_number']}-qism", callback_data=f"episode:{ep['id']}")
+        builder.button(text=f"🍿 {ep['episode_number']}-qism", callback_data=f"episode:{ep['id']}")
     builder.button(text="⬅️ Orqaga", callback_data=f"back_to_langs:{series_id}")
-    builder.adjust(4)
+    builder.adjust(2) # 2 columns for cleaner large buttons
     
     await callback.message.edit_text(
-        f"🎬 *{series_name}* ({language} tili) qismini tanlang:",
+        f"🎬 *{series_name}* ({language} tili)\n\n🍿 Qismni tanlang:",
         reply_markup=builder.as_markup(),
         parse_mode="Markdown"
     )
@@ -159,17 +161,22 @@ async def select_episode(callback: types.CallbackQuery):
         return
         
     file_id, title, episode_number, series_name, language = row
-    caption = f"🎬 *{series_name}*\n🔑 {episode_number}-qism\n🌐 Til: {language}"
+    caption = (
+        f"✨ *BEST TURKISH DRAMMAS* ✨\n\n"
+        f"🎬 *{series_name}*\n"
+        f"🔑 *{episode_number}-qism*\n"
+        f"🌐 *Til:* {language}"
+    )
     if title:
-        caption += f"\n📌 {title}"
+        caption += f"\n📌 *Sarlavha:* {title}"
         
-    await callback.answer("Video yuborilmoqda...")
+    await callback.answer("Premium video yuborilmoqda...")
     await bot.send_video(chat_id=callback.message.chat.id, video=file_id, caption=caption, parse_mode="Markdown")
 
 # Back to series list
 @dp.callback_query(F.data == "back_to_series")
 async def back_to_series(callback: types.CallbackQuery):
-    await callback.message.edit_text("Bizdagi turk seriallari ro'yxati:", reply_markup=get_series_keyboard())
+    await callback.message.edit_text("✨ *Best Turkish Drammas* seriallari ro'yxati:", reply_markup=get_series_keyboard(), parse_mode="Markdown")
 
 # --- Admin Handlers ---
 
