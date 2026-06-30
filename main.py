@@ -58,7 +58,7 @@ async def start_cmd(message: types.Message):
     user_id = message.from_user.id
     welcome = (
         "Assalomu alaykum! Turk seriallari botiga xush kelibsiz.\n\n"
-        "Seriallarni ko'rish uchun quyidagi tugmani bosing."
+        "Bizdagi turk seriallari ro'yxati:"
     )
     if db.is_admin(user_id):
         welcome += (
@@ -66,7 +66,8 @@ async def start_cmd(message: types.Message):
             "• /add\\_series - Yangi serial qismini yuklash\n"
             "• /add\\_admin <user_id> - Yangi admin qo'shish"
         )
-    await message.reply(welcome, reply_markup=get_main_menu())
+    # Send welcome text and show the inline series keyboard directly!
+    await message.reply(welcome, reply_markup=get_series_keyboard())
 
 # Handle Reply Button
 @dp.message(F.text == "🎬 Seriallar")
@@ -265,6 +266,9 @@ async def process_title(message: types.Message, state: FSMContext):
     await state.clear()
 
 async def main():
+    await bot.set_my_commands([
+        types.BotCommand(command="start", description="Botni qayta ishga tushirish (Seriallar)")
+    ])
     await dp.start_polling(bot)
 
 if __name__ == "__main__":
