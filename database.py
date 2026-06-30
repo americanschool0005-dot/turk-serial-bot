@@ -89,6 +89,13 @@ def init_db():
         )
     """)
 
+    # Users table for broadcast
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS users (
+            user_id BIGINT PRIMARY KEY
+        )
+    """)
+
     default_series = [
         "Qashqirlar makoni", "Ichkarida", "Chuqur", "Hukm",
         "Hukmdor Usmon", "Oila uchun", "Sevgi istorbi", "Muhtasham Yuz Yil"
@@ -116,6 +123,25 @@ def add_admin(user_id):
     conn.commit()
     cursor.close()
     conn.close()
+
+def save_user(user_id):
+    """Save user ID for broadcast purposes."""
+    conn = get_conn()
+    cursor = AdaptiveCursor(conn.cursor())
+    cursor.execute("INSERT INTO users (user_id) VALUES (%s) ON CONFLICT DO NOTHING", (user_id,))
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+def get_all_users():
+    """Return list of all user IDs for broadcast."""
+    conn = get_conn()
+    cursor = AdaptiveCursor(conn.cursor())
+    cursor.execute("SELECT user_id FROM users")
+    rows = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return [r[0] for r in rows]
 
 def get_all_series():
     conn = get_conn()
