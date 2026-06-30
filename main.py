@@ -352,9 +352,12 @@ async def is_subscribed(user_id: int) -> bool:
         return True
     try:
         member = await bot.get_chat_member(CHANNEL_ID, user_id)
+        logging.info(f"[SUB CHECK] user={user_id} status={member.status}")
         return member.status not in ("left", "kicked")
-    except Exception:
-        return True  # if we can't check, allow access
+    except Exception as e:
+        logging.warning(f"[SUB CHECK ERROR] user={user_id} error={e}")
+        # If bot is not admin in channel or channel not found — block access
+        return False
 
 def subscribe_keyboard(lang: str) -> types.InlineKeyboardMarkup:
     builder = InlineKeyboardBuilder()
@@ -447,7 +450,6 @@ async def show_series_menu(message: types.Message):
             parse_mode="Markdown"
         )
         return
-    lang = get_lang(message.from_user.language_code)
     await message.reply(LOCALIZATION[lang]["series_menu"], reply_markup=get_series_keyboard(), parse_mode="Markdown")
 
 # Handle Series Select (Now automatically selects the user's interface language by default)
