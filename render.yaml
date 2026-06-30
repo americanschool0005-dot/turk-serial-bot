@@ -1,4 +1,4 @@
-﻿services:
+services:
   - type: worker
     name: turk-serial-bot
     runtime: docker
@@ -8,6 +8,8 @@
       - key: BOT_TOKEN
         sync: false
       - key: ADMIN_ID
+        sync: false
+      - key: CHANNEL_ID
         sync: false
       - key: DATABASE_URL
         fromDatabase:
