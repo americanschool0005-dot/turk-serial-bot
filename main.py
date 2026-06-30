@@ -42,8 +42,9 @@ LOCALIZATION = {
     "uz": {
         "welcome": (
             "✨ *BEST TURKISH DRAMMAS* ✨\n\n"
-            "Assalomu alaykum, hurmatli tomoshabin! 👑\n"
-            "Eng sara va mashhur turk seriallari olamiga xush kelibsiz. 🍿\n\n"
+            "Assalomu alaykum, hurmatli tomoshabin! 👑\n\n"
+            "🌐 *Avtomatik til:* Tizim Telegram ilovangiz tilini aniqlab, interfeysni avtomatik ravishda *O'zbekcha* qilib sozlaganini ma'lum qiladi! ⚙️\n\n"
+            "Eng sara va mashhur turk seriallari hashamatli olamiga xush kelibsiz. 🍿\n\n"
             "👇 Quyidagi ro'yxatdan o'zingizga ma'qul serialni tanlang:"
         ),
         "series_menu": "✨ *Best Turkish Drammas* seriallari ro'yxati:",
@@ -61,8 +62,9 @@ LOCALIZATION = {
     "ru": {
         "welcome": (
             "✨ *BEST TURKISH DRAMMAS* ✨\n\n"
-            "Здравствуйте, уважаемый зритель! 👑\n"
-            "Добро пожаловать в мир лучших турецких сериалов. 🍿\n\n"
+            "Здравствуйте, уважаемый зритель! 👑\n\n"
+            "🌐 *Автовыбор языка:* Система определила язык вашего Telegram и автоматически настроила интерфейс на *Русский*! ⚙️\n\n"
+            "Добро пожаловать в премиальный мир лучших турецких сериалов. 🍿\n\n"
             "👇 Выберите интересующий вас сериал из списка ниже:"
         ),
         "series_menu": "✨ Список сериалов *Best Turkish Drammas*:",
@@ -80,8 +82,9 @@ LOCALIZATION = {
     "tr": {
         "welcome": (
             "✨ *BEST TURKISH DRAMMAS* ✨\n\n"
-            "Merhaba, sevgili seyirci! 👑\n"
-            "En iyi ve en popüler Türk dizilerinin dünyasına hoş geldiniz. 🍿\n\n"
+            "Merhaba, sevgili seyirci! 👑\n\n"
+            "🌐 *Otomatik Dil Seçimi:* Sistem Telegram uygulamanızın dilini tespit etti ve arayüzü otomatik olarak *Türkçe* yaptı! ⚙️\n\n"
+            "En iyi ve en popüler Türk dizilerinin lüks dünyasına hoş geldiniz. 🍿\n\n"
             "👇 Lütfen aşağıdaki listeden bir dizi seçin:"
         ),
         "series_menu": "✨ *Best Turkish Drammas* dizi listesi:",
@@ -99,8 +102,9 @@ LOCALIZATION = {
     "en": {
         "welcome": (
             "✨ *BEST TURKISH DRAMMAS* ✨\n\n"
-            "Welcome, dear viewer! 👑\n"
-            "Welcome to the world of best Turkish TV series. 🍿\n\n"
+            "Welcome, dear viewer! 👑\n\n"
+            "🌐 *Language Detection:* The system detected your Telegram language and automatically set the interface to *English*! ⚙️\n\n"
+            "Welcome to the premium world of the best Turkish TV series. 🍿\n\n"
             "👇 Select your preferred series from the list below:"
         ),
         "series_menu": "✨ *Best Turkish Drammas* series list:",
