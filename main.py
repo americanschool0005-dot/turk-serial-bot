@@ -32,8 +32,7 @@ if ADMIN_ID:
 
 # FSM States for Admin upload
 class AddSeriesStates(StatesGroup):
-    waiting_for_name = State()
-    waiting_for_season = State()
+    waiting_for_language = State()
     waiting_for_episode = State()
     waiting_for_video = State()
     waiting_for_title = State()
@@ -74,32 +73,75 @@ async def start_cmd(message: types.Message):
 async def show_series_menu(message: types.Message):
     await message.reply("Bizdagi turk seriallari ro'yxati:", reply_markup=get_series_keyboard())
 
-# Handle Series Select (Now bypasses season and displays episode buttons directly)
+# Handle Series Select (Now prompts for language)
 @dp.callback_query(F.data.startswith("series:"))
 async def select_series(callback: types.CallbackQuery):
     series_id = int(callback.data.split(":")[1])
-    episodes = db.get_all_episodes_for_series(series_id)
+    series_list = db.get_all_series()
+    series_name = next((s["name"] for s in series_list if s["id"] == series_id), "Serial")
     
+    builder = InlineKeyboardBuilder()
+    languages = [("Turkish 🇹🇷", "Turkish"), ("English 🇬🇧", "English"), ("Russian 🇷🇺", "Russian"), ("Uzbek 🇺🇿", "Uzbek")]
+    for text, lang in languages:
+        builder.button(text=text, callback_data=f"lang:{series_id}:{lang}")
+    builder.button(text="⬅️ Orqaga", callback_data="back_to_series")
+    builder.adjust(2)
+    
+    await callback.message.edit_text(
+        f"🎬 *{series_name}* seriali uchun tilni tanlang:",
+        reply_markup=builder.as_markup(),
+        parse_mode="Markdown"
+    )
+
+# Handle back to languages
+@dp.callback_query(F.data.startswith("back_to_langs:"))
+async def back_to_langs(callback: types.CallbackQuery):
+    series_id = int(callback.data.split(":")[1])
+    series_list = db.get_all_series()
+    series_name = next((s["name"] for s in series_list if s["id"] == series_id), "Serial")
+    
+    builder = InlineKeyboardBuilder()
+    languages = [("Turkish 🇹🇷", "Turkish"), ("English 🇬🇧", "English"), ("Russian 🇷🇺", "Russian"), ("Uzbek 🇺🇿", "Uzbek")]
+    for text, lang in languages:
+        builder.button(text=text, callback_data=f"lang:{series_id}:{lang}")
+    builder.button(text="⬅️ Orqaga", callback_data="back_to_series")
+    builder.adjust(2)
+    
+    await callback.message.edit_text(
+        f"🎬 *{series_name}* seriali uchun tilni tanlang:",
+        reply_markup=builder.as_markup(),
+        parse_mode="Markdown"
+    )
+
+# Handle Language Select (Displays episodes available in that language)
+@dp.callback_query(F.data.startswith("lang:"))
+async def select_language(callback: types.CallbackQuery):
+    parts = callback.data.split(":")
+    series_id = int(parts[1])
+    language = parts[2]
+    
+    episodes = db.get_all_episodes_for_series(series_id, language)
     series_list = db.get_all_series()
     series_name = next((s["name"] for s in series_list if s["id"] == series_id), "Serial")
     
     if not episodes:
+        builder = InlineKeyboardBuilder()
+        builder.button(text="⬅️ Orqaga", callback_data=f"back_to_langs:{series_id}")
         await callback.message.edit_text(
-            f"🎬 *{series_name}* seriali uchun hali qismlar joylanmagan.",
-            reply_markup=get_series_keyboard(),
+            f"🎬 *{series_name}* seriali uchun *{language}* tilida hali qismlar joylanmagan.",
+            reply_markup=builder.as_markup(),
             parse_mode="Markdown"
         )
         return
         
     builder = InlineKeyboardBuilder()
     for ep in episodes:
-        # Callback data format: episode:<episode_id>
         builder.button(text=f"{ep['episode_number']}-qism", callback_data=f"episode:{ep['id']}")
-    builder.button(text="⬅️ Orqaga", callback_data="back_to_series")
-    builder.adjust(4) # 4 columns for clean grid
+    builder.button(text="⬅️ Orqaga", callback_data=f"back_to_langs:{series_id}")
+    builder.adjust(4)
     
     await callback.message.edit_text(
-        f"🎬 *{series_name}* serialining qismini tanlang:",
+        f"🎬 *{series_name}* ({language} tili) qismini tanlang:",
         reply_markup=builder.as_markup(),
         parse_mode="Markdown"
     )
@@ -115,8 +157,8 @@ async def select_episode(callback: types.CallbackQuery):
         await callback.answer("Qism topilmadi.")
         return
         
-    file_id, title, episode_number, series_name = row
-    caption = f"🎬 *{series_name}*\n🔑 {episode_number}-qism"
+    file_id, title, episode_number, series_name, language = row
+    caption = f"🎬 *{series_name}*\n🔑 {episode_number}-qism\n🌐 Til: {language}"
     if title:
         caption += f"\n📌 {title}"
         
@@ -163,8 +205,27 @@ async def add_series_cmd(message: types.Message, state: FSMContext):
 async def process_add_to(callback: types.CallbackQuery, state: FSMContext):
     series_name = callback.data.split(":")[1]
     await state.update_data(series_name=series_name, season=1) # Season defaults to 1
+    await state.set_state(AddSeriesStates.waiting_for_language)
+    
+    # Prompt for language
+    builder = InlineKeyboardBuilder()
+    languages = ["Turkish", "English", "Russian", "Uzbek"]
+    for lang in languages:
+        builder.button(text=lang, callback_data=f"add_lang:{lang}")
+    builder.adjust(2)
+    
+    await callback.message.edit_text(
+        f"🎬 *{series_name}* uchun qaysi tilda qism qo'shmoqchisiz?",
+        reply_markup=builder.as_markup(),
+        parse_mode="Markdown"
+    )
+
+@dp.callback_query(F.data.startswith("add_lang:"), AddSeriesStates.waiting_for_language)
+async def process_add_lang(callback: types.CallbackQuery, state: FSMContext):
+    language = callback.data.split(":")[1]
+    await state.update_data(language=language)
     await state.set_state(AddSeriesStates.waiting_for_episode)
-    await callback.message.edit_text(f"🎬 *{series_name}* uchun qism raqamini kiriting:", parse_mode="Markdown")
+    await callback.message.edit_text("Qism raqamini kiriting:")
 
 @dp.message(AddSeriesStates.waiting_for_episode)
 async def process_episode(message: types.Message, state: FSMContext):
@@ -193,11 +254,12 @@ async def process_title(message: types.Message, state: FSMContext):
         season_number=data["season"],
         episode_number=data["episode"],
         file_id=data["file_id"],
+        language=data["language"],
         title=title if title else f"{data['series_name']} {data['episode']}-qism"
     )
     
     if success:
-        await message.reply(f"Qism muvaffaqiyatli saqlandi! 🎉\nSerial: {data['series_name']}\nQism: {data['episode']}")
+        await message.reply(f"Qism muvaffaqiyatli saqlandi! 🎉\nSerial: {data['series_name']}\nTil: {data['language']}\nQism: {data['episode']}")
     else:
         await message.reply("Saqlashda xatolik yuz berdi.")
     await state.clear()
