@@ -37,10 +37,103 @@ class AddSeriesStates(StatesGroup):
     waiting_for_video = State()
     waiting_for_title = State()
 
+# Localization dictionaries
+LOCALIZATION = {
+    "uz": {
+        "welcome": (
+            "✨ *BEST TURKISH DRAMMAS* ✨\n\n"
+            "Assalomu alaykum, hurmatli tomoshabin! 👑\n"
+            "Eng sara va mashhur turk seriallari olamiga xush kelibsiz. 🍿\n\n"
+            "👇 Quyidagi ro'yxatdan o'zingizga ma'qul serialni tanlang:"
+        ),
+        "series_menu": "✨ *Best Turkish Drammas* seriallari ro'yxati:",
+        "select_lang": "👑 *{series_name}* seriali\n\n🌐 Iltimos, tomosha qilish tilini tanlang:",
+        "no_episodes": "⚠️ *{series_name}* seriali uchun *{language}* tilida hali qismlar joylanmagan.",
+        "select_episode": "🎬 *{series_name}* ({language} tili)\n\n🍿 Qismni tanlang:",
+        "back": "⬅️ Orqaga",
+        "btn_series": "🎬 Seriallar",
+        "caption_title": "✨ *BEST TURKISH DRAMMAS* ✨",
+        "caption_lang": "Til",
+        "caption_episode": "qism",
+        "caption_name": "Sarlavha",
+        "sending_video": "Premium video yuborilmoqda..."
+    },
+    "ru": {
+        "welcome": (
+            "✨ *BEST TURKISH DRAMMAS* ✨\n\n"
+            "Здравствуйте, уважаемый зритель! 👑\n"
+            "Добро пожаловать в мир лучших турецких сериалов. 🍿\n\n"
+            "👇 Выберите интересующий вас сериал из списка ниже:"
+        ),
+        "series_menu": "✨ Список сериалов *Best Turkish Drammas*:",
+        "select_lang": "👑 Сериал *{series_name}*\n\n🌐 Пожалуйста, выберите язык просмотра:",
+        "no_episodes": "⚠️ Для сериала *{series_name}* еще нет серий на языке: *{language}*.",
+        "select_episode": "🎬 *{series_name}* (Язык: {language})\n\n🍿 Выберите серию:",
+        "back": "⬅️ Назад",
+        "btn_series": "🎬 Сериалы",
+        "caption_title": "✨ *BEST TURKISH DRAMMAS* ✨",
+        "caption_lang": "Язык",
+        "caption_episode": "серия",
+        "caption_name": "Название",
+        "sending_video": "Отправка премиум видео..."
+    },
+    "tr": {
+        "welcome": (
+            "✨ *BEST TURKISH DRAMMAS* ✨\n\n"
+            "Merhaba, sevgili seyirci! 👑\n"
+            "En iyi ve en popüler Türk dizilerinin dünyasına hoş geldiniz. 🍿\n\n"
+            "👇 Lütfen aşağıdaki listeden bir dizi seçin:"
+        ),
+        "series_menu": "✨ *Best Turkish Drammas* dizi listesi:",
+        "select_lang": "👑 *{series_name}* dizisi\n\n🌐 Lütfen izlemek istediğiniz dili seçin:",
+        "no_episodes": "⚠️ *{series_name}* dizisi için *{language}* dilinde henüz bölüm yüklenmedi.",
+        "select_episode": "🎬 *{series_name}* (Dil: {language})\n\n🍿 Bölüm seçin:",
+        "back": "⬅️ Geri",
+        "btn_series": "🎬 Diziler",
+        "caption_title": "✨ *BEST TURKISH DRAMMAS* ✨",
+        "caption_lang": "Dil",
+        "caption_episode": "bölüm",
+        "caption_name": "Başlık",
+        "sending_video": "Premium video gönderiliyor..."
+    },
+    "en": {
+        "welcome": (
+            "✨ *BEST TURKISH DRAMMAS* ✨\n\n"
+            "Welcome, dear viewer! 👑\n"
+            "Welcome to the world of best Turkish TV series. 🍿\n\n"
+            "👇 Select your preferred series from the list below:"
+        ),
+        "series_menu": "✨ *Best Turkish Drammas* series list:",
+        "select_lang": "👑 Series *{series_name}*\n\n🌐 Please select your viewing language:",
+        "no_episodes": "⚠️ No episodes loaded in *{language}* for *{series_name}* yet.",
+        "select_episode": "🎬 *{series_name}* (Language: {language})\n\n🍿 Select episode:",
+        "back": "⬅️ Back",
+        "btn_series": "🎬 Series",
+        "caption_title": "✨ *BEST TURKISH DRAMMAS* ✨",
+        "caption_lang": "Language",
+        "caption_episode": "episode",
+        "caption_name": "Title",
+        "sending_video": "Sending premium video..."
+    }
+}
+
+def get_lang(user_lang_code: str) -> str:
+    if not user_lang_code:
+        return "en"
+    lang = user_lang_code.lower()
+    if lang.startswith("uz"):
+        return "uz"
+    if lang.startswith("ru"):
+        return "ru"
+    if lang.startswith("tr"):
+        return "tr"
+    return "en"
+
 # Reply menu
-def get_main_menu():
+def get_main_menu(lang_code: str):
+    lang = get_lang(lang_code)
     builder = ReplyKeyboardBuilder()
-    builder.row(types.KeyboardButton(text="🎬 Seriallar"))
+    builder.row(types.KeyboardButton(text=LOCALIZATION[lang]["btn_series"]))
     return builder.as_markup(resize_keyboard=True)
 
 # Inline series list
@@ -56,12 +149,12 @@ def get_series_keyboard():
 @dp.message(Command("start"))
 async def start_cmd(message: types.Message):
     user_id = message.from_user.id
-    welcome = (
-        "✨ *BEST TURKISH DRAMMAS* ✨\n\n"
-        "Assalomu alaykum, hurmatli tomoshabin! 👑\n"
-        "Eng sara va mashhur turk seriallari olamiga xush kelibsiz. 🍿\n\n"
-        "👇 Quyidagi ro'yxatdan o'zingizga ma'qul serialni tanlang:"
-    )
+    lang = get_lang(message.from_user.language_code)
+    
+    # Send the localized bottom reply menu first to register the keyboard
+    await message.answer("🍿", reply_markup=get_main_menu(message.from_user.language_code))
+    
+    welcome = LOCALIZATION[lang]["welcome"]
     if db.is_admin(user_id):
         welcome += (
             "\n\n🛠 *Admin paneli buyruqlari:*\n"
@@ -72,9 +165,10 @@ async def start_cmd(message: types.Message):
     await message.reply(welcome, reply_markup=get_series_keyboard(), parse_mode="Markdown")
 
 # Handle Reply Button
-@dp.message(F.text == "🎬 Seriallar")
+@dp.message(F.text.in_({"🎬 Seriallar", "🎬 Сериалы", "🎬 Diziler", "🎬 Series"}))
 async def show_series_menu(message: types.Message):
-    await message.reply("✨ *Best Turkish Drammas* seriallari ro'yxati:", reply_markup=get_series_keyboard(), parse_mode="Markdown")
+    lang = get_lang(message.from_user.language_code)
+    await message.reply(LOCALIZATION[lang]["series_menu"], reply_markup=get_series_keyboard(), parse_mode="Markdown")
 
 # Handle Series Select (Now prompts for language)
 @dp.callback_query(F.data.startswith("series:"))
@@ -82,16 +176,17 @@ async def select_series(callback: types.CallbackQuery):
     series_id = int(callback.data.split(":")[1])
     series_list = db.get_all_series()
     series_name = next((s["name"] for s in series_list if s["id"] == series_id), "Serial")
+    lang = get_lang(callback.from_user.language_code)
     
     builder = InlineKeyboardBuilder()
     languages = [("Turkish 🇹🇷", "Turkish"), ("English 🇬🇧", "English"), ("Russian 🇷🇺", "Russian"), ("Uzbek 🇺🇿", "Uzbek")]
-    for text, lang in languages:
-        builder.button(text=text, callback_data=f"lang:{series_id}:{lang}")
-    builder.button(text="⬅️ Orqaga", callback_data="back_to_series")
+    for text, l in languages:
+        builder.button(text=text, callback_data=f"lang:{series_id}:{l}")
+    builder.button(text=LOCALIZATION[lang]["back"], callback_data="back_to_series")
     builder.adjust(2)
     
     await callback.message.edit_text(
-        f"👑 *{series_name}* seriali\n\n🌐 Iltimos, tomosha qilish tilini tanlang:",
+        LOCALIZATION[lang]["select_lang"].format(series_name=series_name),
         reply_markup=builder.as_markup(),
         parse_mode="Markdown"
     )
@@ -102,16 +197,17 @@ async def back_to_langs(callback: types.CallbackQuery):
     series_id = int(callback.data.split(":")[1])
     series_list = db.get_all_series()
     series_name = next((s["name"] for s in series_list if s["id"] == series_id), "Serial")
+    lang = get_lang(callback.from_user.language_code)
     
     builder = InlineKeyboardBuilder()
     languages = [("Turkish 🇹🇷", "Turkish"), ("English 🇬🇧", "English"), ("Russian 🇷🇺", "Russian"), ("Uzbek 🇺🇿", "Uzbek")]
-    for text, lang in languages:
-        builder.button(text=text, callback_data=f"lang:{series_id}:{lang}")
-    builder.button(text="⬅️ Orqaga", callback_data="back_to_series")
+    for text, l in languages:
+        builder.button(text=text, callback_data=f"lang:{series_id}:{l}")
+    builder.button(text=LOCALIZATION[lang]["back"], callback_data="back_to_series")
     builder.adjust(2)
     
     await callback.message.edit_text(
-        f"👑 *{series_name}* seriali\n\n🌐 Iltimos, tomosha qilish tilini tanlang:",
+        LOCALIZATION[lang]["select_lang"].format(series_name=series_name),
         reply_markup=builder.as_markup(),
         parse_mode="Markdown"
     )
@@ -122,6 +218,7 @@ async def select_language(callback: types.CallbackQuery):
     parts = callback.data.split(":")
     series_id = int(parts[1])
     language = parts[2]
+    lang = get_lang(callback.from_user.language_code)
     
     episodes = db.get_all_episodes_for_series(series_id, language)
     series_list = db.get_all_series()
@@ -129,9 +226,9 @@ async def select_language(callback: types.CallbackQuery):
     
     if not episodes:
         builder = InlineKeyboardBuilder()
-        builder.button(text="⬅️ Orqaga", callback_data=f"back_to_langs:{series_id}")
+        builder.button(text=LOCALIZATION[lang]["back"], callback_data=f"back_to_langs:{series_id}")
         await callback.message.edit_text(
-            f"⚠️ *{series_name}* seriali uchun *{language}* tilida hali qismlar joylanmagan.",
+            LOCALIZATION[lang]["no_episodes"].format(series_name=series_name, language=language),
             reply_markup=builder.as_markup(),
             parse_mode="Markdown"
         )
@@ -139,12 +236,12 @@ async def select_language(callback: types.CallbackQuery):
         
     builder = InlineKeyboardBuilder()
     for ep in episodes:
-        builder.button(text=f"🍿 {ep['episode_number']}-qism", callback_data=f"episode:{ep['id']}")
-    builder.button(text="⬅️ Orqaga", callback_data=f"back_to_langs:{series_id}")
+        builder.button(text=f"🍿 {ep['episode_number']}-{LOCALIZATION[lang]['caption_episode']}", callback_data=f"episode:{ep['id']}")
+    builder.button(text=LOCALIZATION[lang]["back"], callback_data=f"back_to_langs:{series_id}")
     builder.adjust(2) # 2 columns for cleaner large buttons
     
     await callback.message.edit_text(
-        f"🎬 *{series_name}* ({language} tili)\n\n🍿 Qismni tanlang:",
+        LOCALIZATION[lang]["select_episode"].format(series_name=series_name, language=language),
         reply_markup=builder.as_markup(),
         parse_mode="Markdown"
     )
@@ -153,6 +250,7 @@ async def select_language(callback: types.CallbackQuery):
 @dp.callback_query(F.data.startswith("episode:"))
 async def select_episode(callback: types.CallbackQuery):
     episode_id = int(callback.data.split(":")[1])
+    lang = get_lang(callback.from_user.language_code)
     
     row = db.get_episode_by_id(episode_id)
     
@@ -162,21 +260,22 @@ async def select_episode(callback: types.CallbackQuery):
         
     file_id, title, episode_number, series_name, language = row
     caption = (
-        f"✨ *BEST TURKISH DRAMMAS* ✨\n\n"
+        f"{LOCALIZATION[lang]['caption_title']}\n\n"
         f"🎬 *{series_name}*\n"
-        f"🔑 *{episode_number}-qism*\n"
-        f"🌐 *Til:* {language}"
+        f"🔑 *{episode_number}-{LOCALIZATION[lang]['caption_episode']}*\n"
+        f"🌐 *{LOCALIZATION[lang]['caption_lang']}:* {language}"
     )
     if title:
-        caption += f"\n📌 *Sarlavha:* {title}"
+        caption += f"\n📌 *{LOCALIZATION[lang]['caption_name']}:* {title}"
         
-    await callback.answer("Premium video yuborilmoqda...")
+    await callback.answer(LOCALIZATION[lang]["sending_video"])
     await bot.send_video(chat_id=callback.message.chat.id, video=file_id, caption=caption, parse_mode="Markdown")
 
 # Back to series list
 @dp.callback_query(F.data == "back_to_series")
 async def back_to_series(callback: types.CallbackQuery):
-    await callback.message.edit_text("✨ *Best Turkish Drammas* seriallari ro'yxati:", reply_markup=get_series_keyboard(), parse_mode="Markdown")
+    lang = get_lang(callback.from_user.language_code)
+    await callback.message.edit_text(LOCALIZATION[lang]["series_menu"], reply_markup=get_series_keyboard(), parse_mode="Markdown")
 
 # --- Admin Handlers ---
 
