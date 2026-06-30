@@ -42,135 +42,283 @@ class AddSeriesStates(StatesGroup):
 LOCALIZATION = {
     "uz": {
         "welcome": (
-            "✨ *BEST TURKISH DRAMMAS* ✨\n\n"
-            "Assalomu alaykum, hurmatli tomoshabin! 👑\n\n"
-            "🌐 *Avtomatik til:* Tizim Telegram ilovangiz tilini aniqlab, interfeysni avtomatik ravishda *O'zbekcha* qilib sozlaganini ma'lum qiladi! ⚙️\n\n"
-            "Eng sara va mashhur turk seriallari hashamatli olamiga xush kelibsiz. 🍿\n\n"
-            "👇 Quyidagi ro'yxatdan o'zingizga ma'qul serialni tanlang:"
+            "━━━━━━━━━━━━━━━━━━━━━━\n"
+            "👑 *BEST TURKISH DRAMMAS* 👑\n"
+            "━━━━━━━━━━━━━━━━━━━━━━\n\n"
+            "🌹 Xush kelibsiz, hurmatli mehmon!\n\n"
+            "🎭 Siz turk seriallarining *eng noyob va hashamatli* kolleksiyasiga qadim qo'ydingiz.\n\n"
+            "🌐 ✦ *Til avtomatik aniqlandi:* O'zbek tili\n\n"
+            "💎 *Premium sifat · HD · Eng sara seriallar*\n\n"
+            "━━━━━━━━━━━━━━━━━━━━━━\n"
+            "🎬 Quyidan o'zingizga ma'qul serialni tanlang:"
         ),
-        "series_menu": "✨ *Best Turkish Drammas* seriallari ro'yxati:",
-        "select_lang": "👑 *{series_name}* seriali\n\n🌐 Iltimos, tomosha qilish tilini tanlang:",
-        "no_episodes": "⚠️ *{series_name}* seriali uchun *{language}* tilida hali qismlar joylanmagan. Boshqa tillardan birini tanlang:",
-        "select_episode": "🎬 *{series_name}* ({language} tili)\n\n🍿 Qismni tanlang:",
-        "back": "⬅️ Orqaga",
+        "series_menu": (
+            "━━━━━━━━━━━━━━━━━━━━━━\n"
+            "🎭 *SERIALLAR RO'YXATI* 🎭\n"
+            "━━━━━━━━━━━━━━━━━━━━━━\n"
+            "💎 Premium sifatda tomosha qiling:"
+        ),
+        "select_lang": (
+            "━━━━━━━━━━━━━━━━━━━━━━\n"
+            "🎬 *{series_name}*\n"
+            "━━━━━━━━━━━━━━━━━━━━━━\n\n"
+            "🌐 Tomosha qilish tilini tanlang:"
+        ),
+        "no_episodes": (
+            "━━━━━━━━━━━━━━━━━━━━━━\n"
+            "🎬 *{series_name}*\n"
+            "━━━━━━━━━━━━━━━━━━━━━━\n\n"
+            "⚠️ *{language}* tilida hozircha qismlar mavjud emas.\n"
+            "🌐 Boshqa tilni tanlang:"
+        ),
+        "select_episode": (
+            "━━━━━━━━━━━━━━━━━━━━━━\n"
+            "🎬 *{series_name}*\n"
+            "🌐 Til: *{language}*\n"
+            "━━━━━━━━━━━━━━━━━━━━━━\n\n"
+            "🍿 Qismni tanlang:"
+        ),
+        "back": "◀️ Orqaga",
         "btn_series": "🎬 Seriallar",
-        "caption_title": "✨ *BEST TURKISH DRAMMAS* ✨",
-        "caption_lang": "Til",
-        "caption_name": "Sarlavha",
-        "sending_video": "Premium video yuborilmoqda...",
-        "btn_other_langs": "🌐 Boshqa tillar",
-        "auto_episodes_title": "🎬 *{series_name}* ({language} tili)\n\n🍿 Qismni tanlang:",
-        "languages": [("Turkcha 🇹🇷", "Turkish"), ("Inglizcha 🇬🇧", "English"), ("Ruscha 🇷🇺", "Russian"), ("O'zbekcha 🇺🇿", "Uzbek")],
-        "episode_btn_format": "🍿 {number}-qism",
-        "episode_caption_format": "🔑 *{number}-qism*",
-        "must_subscribe": (
-            "🔒 *Botdan foydalanish uchun kanalimizga obuna bo'ling!*\n\n"
-            "👇 Obuna bo'lgandan so'ng, quyidagi tugmani bosing:"
+        "caption_title": "👑 *BEST TURKISH DRAMMAS* 👑",
+        "caption_lang": "🌐 Til",
+        "caption_name": "📌 Sarlavha",
+        "sending_video": "💎 Premium video tayyorlanmoqda...",
+        "btn_other_langs": "🌐 Boshqa tillarda",
+        "auto_episodes_title": (
+            "━━━━━━━━━━━━━━━━━━━━━━\n"
+            "🎬 *{series_name}*\n"
+            "🌐 Til: *{language}*\n"
+            "━━━━━━━━━━━━━━━━━━━━━━\n\n"
+            "🍿 Qismni tanlang:"
         ),
-        "btn_subscribed": "✅ Obuna bo'ldim",
-        "btn_subscribe": "📢 Kanalga o'tish",
-        "not_subscribed": "❌ Siz hali kanalga obuna bo'lmadingiz! Iltimos obuna bo'lib, qayta bosing.",
-        "broadcast_done": "✅ Reklama {count} ta foydalanuvchiga yuborildi!",
-        "broadcast_hint": "📢 Reklama xabarini yuboring (matn, rasm, video - istalgan format):"
+        "languages": [("🇹🇷 Turkcha", "Turkish"), ("🇬🇧 Inglizcha", "English"), ("🇷🇺 Ruscha", "Russian"), ("🇺🇿 O'zbekcha", "Uzbek")],
+        "episode_btn_format": "🎬 {number} — qism",
+        "episode_caption_format": "🎬 *{number} — qism*",
+        "must_subscribe": (
+            "━━━━━━━━━━━━━━━━━━━━━━\n"
+            "💎 *BEST TURKISH DRAMMAS* 💎\n"
+            "━━━━━━━━━━━━━━━━━━━━━━\n\n"
+            "🔐 Botdan foydalanish uchun avval\n"
+            "kanalimizga obuna bo'lishingiz zarur!\n\n"
+            "✦ Obuna bo'ling → Qaytib keling → Rohatlaning 🎬\n\n"
+            "👇 Quyidagi tugmani bosing:"
+        ),
+        "btn_subscribed": "✅ Obuna bo'ldim — Kirish",
+        "btn_subscribe": "💎 Kanalga o'tish →",
+        "not_subscribed": "⚠️ Siz hali obuna bo'lmadingiz. Obuna bo'lib, qayta bosing!",
+        "broadcast_done": "✅ Xabar {count} ta foydalanuvchiga muvaffaqiyatli yuborildi!",
+        "broadcast_hint": "📢 Reklama xabarini yuboring:\n_(matn, rasm, video — istalgan format)_"
     },
     "ru": {
         "welcome": (
-            "✨ *BEST TURKISH DRAMMAS* ✨\n\n"
-            "Здравствуйте, уважаемый зритель! 👑\n\n"
-            "🌐 *Автовыбор языка:* Система определила язык вашего Telegram и автоматически настроила интерфейс на *Русский*! ⚙️\n\n"
-            "Добро пожаловать в премиальный мир лучших турецких сериалов. 🍿\n\n"
-            "👇 Выберите интересующий вас сериал из списка ниже:"
+            "━━━━━━━━━━━━━━━━━━━━━━\n"
+            "👑 *BEST TURKISH DRAMMAS* 👑\n"
+            "━━━━━━━━━━━━━━━━━━━━━━\n\n"
+            "🌹 Добро пожаловать, дорогой гость!\n\n"
+            "🎭 Вы вошли в *самую роскошную* коллекцию турецких сериалов.\n\n"
+            "🌐 ✦ *Язык определён автоматически:* Русский\n\n"
+            "💎 *Премиум качество · HD · Лучшие сериалы*\n\n"
+            "━━━━━━━━━━━━━━━━━━━━━━\n"
+            "🎬 Выберите сериал из списка ниже:"
         ),
-        "series_menu": "✨ Список сериалов *Best Turkish Drammas*:",
-        "select_lang": "👑 Сериал *{series_name}*\n\n🌐 Пожалуйста, выберите язык просмотра:",
-        "no_episodes": "⚠️ Для сериала *{series_name}* еще нет серий на языке: *{language}*. Пожалуйста, выберите другой язык:",
-        "select_episode": "🎬 *{series_name}* (Язык: {language})\n\n🍿 Выберите серию:",
-        "back": "⬅️ Назад",
+        "series_menu": (
+            "━━━━━━━━━━━━━━━━━━━━━━\n"
+            "🎭 *СПИСОК СЕРИАЛОВ* 🎭\n"
+            "━━━━━━━━━━━━━━━━━━━━━━\n"
+            "💎 Смотрите в премиум качестве:"
+        ),
+        "select_lang": (
+            "━━━━━━━━━━━━━━━━━━━━━━\n"
+            "🎬 *{series_name}*\n"
+            "━━━━━━━━━━━━━━━━━━━━━━\n\n"
+            "🌐 Выберите язык просмотра:"
+        ),
+        "no_episodes": (
+            "━━━━━━━━━━━━━━━━━━━━━━\n"
+            "🎬 *{series_name}*\n"
+            "━━━━━━━━━━━━━━━━━━━━━━\n\n"
+            "⚠️ На языке *{language}* серий пока нет.\n"
+            "🌐 Выберите другой язык:"
+        ),
+        "select_episode": (
+            "━━━━━━━━━━━━━━━━━━━━━━\n"
+            "🎬 *{series_name}*\n"
+            "🌐 Язык: *{language}*\n"
+            "━━━━━━━━━━━━━━━━━━━━━━\n\n"
+            "🍿 Выберите серию:"
+        ),
+        "back": "◀️ Назад",
         "btn_series": "🎬 Сериалы",
-        "caption_title": "✨ *BEST TURKISH DRAMMAS* ✨",
-        "caption_lang": "Язык",
-        "caption_name": "Название",
-        "sending_video": "Отправка премиум видео...",
+        "caption_title": "👑 *BEST TURKISH DRAMMAS* 👑",
+        "caption_lang": "🌐 Язык",
+        "caption_name": "📌 Название",
+        "sending_video": "💎 Загрузка премиум видео...",
         "btn_other_langs": "🌐 Другие языки",
-        "auto_episodes_title": "🎬 Сериал *{series_name}* (Язык: {language})\n\n🍿 Выберите серию:",
-        "languages": [("Турецкий 🇹🇷", "Turkish"), ("Английский 🇬🇧", "English"), ("Русский 🇷🇺", "Russian"), ("Узбекский 🇺🇿", "Uzbek")],
-        "episode_btn_format": "🍿 {number} серия",
-        "episode_caption_format": "🔑 *{number} серия*",
-        "must_subscribe": (
-            "🔒 *Для использования бота подпишитесь на наш канал!*\n\n"
-            "👇 После подписки нажмите кнопку ниже:"
+        "auto_episodes_title": (
+            "━━━━━━━━━━━━━━━━━━━━━━\n"
+            "🎬 *{series_name}*\n"
+            "🌐 Язык: *{language}*\n"
+            "━━━━━━━━━━━━━━━━━━━━━━\n\n"
+            "🍿 Выберите серию:"
         ),
-        "btn_subscribed": "✅ Я подписался",
-        "btn_subscribe": "📢 Перейти в канал",
-        "not_subscribed": "❌ Вы ещё не подписаны на канал! Подпишитесь и нажмите снова.",
-        "broadcast_done": "✅ Реклама отправлена {count} пользователям!",
-        "broadcast_hint": "📢 Отправьте рекламное сообщение (текст, фото, видео — любой формат):"
+        "languages": [("🇹🇷 Турецкий", "Turkish"), ("🇬🇧 Английский", "English"), ("🇷🇺 Русский", "Russian"), ("🇺🇿 Узбекский", "Uzbek")],
+        "episode_btn_format": "🎬 {number} — серия",
+        "episode_caption_format": "🎬 *{number} — серия*",
+        "must_subscribe": (
+            "━━━━━━━━━━━━━━━━━━━━━━\n"
+            "💎 *BEST TURKISH DRAMMAS* 💎\n"
+            "━━━━━━━━━━━━━━━━━━━━━━\n\n"
+            "🔐 Для использования бота\n"
+            "необходимо подписаться на наш канал!\n\n"
+            "✦ Подпишитесь → Вернитесь → Наслаждайтесь 🎬\n\n"
+            "👇 Нажмите кнопку ниже:"
+        ),
+        "btn_subscribed": "✅ Я подписался — Войти",
+        "btn_subscribe": "💎 Перейти в канал →",
+        "not_subscribed": "⚠️ Вы ещё не подписаны. Подпишитесь и нажмите снова!",
+        "broadcast_done": "✅ Сообщение успешно отправлено {count} пользователям!",
+        "broadcast_hint": "📢 Отправьте рекламное сообщение:\n_(текст, фото, видео — любой формат)_"
     },
     "tr": {
         "welcome": (
-            "✨ *BEST TURKISH DRAMMAS* ✨\n\n"
-            "Merhaba, sevgili seyirci! 👑\n\n"
-            "🌐 *Otomatik Dil Seçimi:* Sistem Telegram uygulamanızın dilini tespit etti ve arayüzü otomatik olarak *Türkçe* yaptı! ⚙️\n\n"
-            "En iyi ve en popüler Türk dizilerinin lüks dünyasına hoş geldiniz. 🍿\n\n"
-            "👇 Lütfen aşağıdaki listeden bir dizi seçin:"
+            "━━━━━━━━━━━━━━━━━━━━━━\n"
+            "👑 *BEST TURKISH DRAMMAS* 👑\n"
+            "━━━━━━━━━━━━━━━━━━━━━━\n\n"
+            "🌹 Hoş geldiniz, değerli misafirimiz!\n\n"
+            "🎭 Türk dizilerinin *en seçkin ve lüks* koleksiyonuna adım attınız.\n\n"
+            "🌐 ✦ *Dil otomatik tespit edildi:* Türkçe\n\n"
+            "💎 *Premium kalite · HD · En iyi diziler*\n\n"
+            "━━━━━━━━━━━━━━━━━━━━━━\n"
+            "🎬 Aşağıdan beğendiğiniz diziyi seçin:"
         ),
-        "series_menu": "✨ *Best Turkish Drammas* dizi listesi:",
-        "select_lang": "👑 *{series_name}* dizisi\n\n🌐 Lütfen izlemek istediğiniz dili seçin:",
-        "no_episodes": "⚠️ *{series_name}* dizisi için *{language}* dilinde henüz bölüm yüklenmedi. Lütfen başka bir dil seçin:",
-        "select_episode": "🎬 *{series_name}* (Dil: {language})\n\n🍿 Bölüm seçin:",
-        "back": "⬅️ Geri",
+        "series_menu": (
+            "━━━━━━━━━━━━━━━━━━━━━━\n"
+            "🎭 *DİZİ LİSTESİ* 🎭\n"
+            "━━━━━━━━━━━━━━━━━━━━━━\n"
+            "💎 Premium kalitede izleyin:"
+        ),
+        "select_lang": (
+            "━━━━━━━━━━━━━━━━━━━━━━\n"
+            "🎬 *{series_name}*\n"
+            "━━━━━━━━━━━━━━━━━━━━━━\n\n"
+            "🌐 İzlemek istediğiniz dili seçin:"
+        ),
+        "no_episodes": (
+            "━━━━━━━━━━━━━━━━━━━━━━\n"
+            "🎬 *{series_name}*\n"
+            "━━━━━━━━━━━━━━━━━━━━━━\n\n"
+            "⚠️ *{language}* dilinde henüz bölüm yok.\n"
+            "🌐 Başka bir dil seçin:"
+        ),
+        "select_episode": (
+            "━━━━━━━━━━━━━━━━━━━━━━\n"
+            "🎬 *{series_name}*\n"
+            "🌐 Dil: *{language}*\n"
+            "━━━━━━━━━━━━━━━━━━━━━━\n\n"
+            "🍿 Bölüm seçin:"
+        ),
+        "back": "◀️ Geri",
         "btn_series": "🎬 Diziler",
-        "caption_title": "✨ *BEST TURKISH DRAMMAS* ✨",
-        "caption_lang": "Dil",
-        "caption_name": "Başlık",
-        "sending_video": "Premium video gönderiliyor...",
+        "caption_title": "👑 *BEST TURKISH DRAMMAS* 👑",
+        "caption_lang": "🌐 Dil",
+        "caption_name": "📌 Başlık",
+        "sending_video": "💎 Premium video yükleniyor...",
         "btn_other_langs": "🌐 Diğer diller",
-        "auto_episodes_title": "🎬 *{series_name}* dizisi (Dil: {language})\n\n🍿 Bölüm seçin:",
-        "languages": [("Türkçe 🇹🇷", "Turkish"), ("İngilizce 🇬🇧", "English"), ("Rusça 🇷🇺", "Russian"), ("Özbekçe 🇺🇿", "Uzbek")],
-        "episode_btn_format": "🍿 {number}. Bölüm",
-        "episode_caption_format": "🔑 *{number}. Bölüm*",
-        "must_subscribe": (
-            "🔒 *Botu kullanmak için kanalımıza abone olun!*\n\n"
-            "👇 Abone olduktan sonra aşağıdaki butona basın:"
+        "auto_episodes_title": (
+            "━━━━━━━━━━━━━━━━━━━━━━\n"
+            "🎬 *{series_name}*\n"
+            "🌐 Dil: *{language}*\n"
+            "━━━━━━━━━━━━━━━━━━━━━━\n\n"
+            "🍿 Bölüm seçin:"
         ),
-        "btn_subscribed": "✅ Abone oldum",
-        "btn_subscribe": "📢 Kanala git",
-        "not_subscribed": "❌ Henüz kanala abone olmadınız! Lütfen abone olup tekrar deneyin.",
-        "broadcast_done": "✅ Reklam {count} kullanıcıya gönderildi!",
-        "broadcast_hint": "📢 Reklam mesajını gönderin (metin, fotoğraf, video — herhangi bir format):"
+        "languages": [("🇹🇷 Türkçe", "Turkish"), ("🇬🇧 İngilizce", "English"), ("🇷🇺 Rusça", "Russian"), ("🇺🇿 Özbekçe", "Uzbek")],
+        "episode_btn_format": "🎬 {number}. Bölüm",
+        "episode_caption_format": "🎬 *{number}. Bölüm*",
+        "must_subscribe": (
+            "━━━━━━━━━━━━━━━━━━━━━━\n"
+            "💎 *BEST TURKISH DRAMMAS* 💎\n"
+            "━━━━━━━━━━━━━━━━━━━━━━\n\n"
+            "🔐 Botu kullanmak için\n"
+            "kanalımıza abone olmanız gerekmektedir!\n\n"
+            "✦ Abone ol → Geri dön → Keyfini çıkar 🎬\n\n"
+            "👇 Aşağıdaki butona basın:"
+        ),
+        "btn_subscribed": "✅ Abone oldum — Giriş",
+        "btn_subscribe": "💎 Kanala git →",
+        "not_subscribed": "⚠️ Henüz abone olmadınız. Abone olup tekrar deneyin!",
+        "broadcast_done": "✅ Mesaj {count} kullanıcıya başarıyla gönderildi!",
+        "broadcast_hint": "📢 Reklam mesajını gönderin:\n_(metin, fotoğraf, video — herhangi bir format)_"
     },
     "en": {
         "welcome": (
-            "✨ *BEST TURKISH DRAMMAS* ✨\n\n"
-            "Welcome, dear viewer! 👑\n\n"
-            "🌐 *Language Detection:* The system detected your Telegram language and automatically set the interface to *English*! ⚙️\n\n"
-            "Welcome to the premium world of the best Turkish TV series. 🍿\n\n"
-            "👇 Select your preferred series from the list below:"
+            "━━━━━━━━━━━━━━━━━━━━━━\n"
+            "👑 *BEST TURKISH DRAMMAS* 👑\n"
+            "━━━━━━━━━━━━━━━━━━━━━━\n\n"
+            "🌹 Welcome, dear guest!\n\n"
+            "🎭 You've entered the *most exquisite and luxurious* collection of Turkish dramas.\n\n"
+            "🌐 ✦ *Language auto-detected:* English\n\n"
+            "💎 *Premium quality · HD · The finest series*\n\n"
+            "━━━━━━━━━━━━━━━━━━━━━━\n"
+            "🎬 Choose your series from the list below:"
         ),
-        "series_menu": "✨ *Best Turkish Drammas* series list:",
-        "select_lang": "👑 Series *{series_name}*\n\n🌐 Please select your viewing language:",
-        "no_episodes": "⚠️ No episodes loaded in *{language}* for *{series_name}* yet. Please select another language:",
-        "select_episode": "🎬 *{series_name}* (Language: {language})\n\n🍿 Select episode:",
-        "back": "⬅️ Back",
+        "series_menu": (
+            "━━━━━━━━━━━━━━━━━━━━━━\n"
+            "🎭 *SERIES COLLECTION* 🎭\n"
+            "━━━━━━━━━━━━━━━━━━━━━━\n"
+            "💎 Watch in premium quality:"
+        ),
+        "select_lang": (
+            "━━━━━━━━━━━━━━━━━━━━━━\n"
+            "🎬 *{series_name}*\n"
+            "━━━━━━━━━━━━━━━━━━━━━━\n\n"
+            "🌐 Select your viewing language:"
+        ),
+        "no_episodes": (
+            "━━━━━━━━━━━━━━━━━━━━━━\n"
+            "🎬 *{series_name}*\n"
+            "━━━━━━━━━━━━━━━━━━━━━━\n\n"
+            "⚠️ No episodes in *{language}* yet.\n"
+            "🌐 Please choose another language:"
+        ),
+        "select_episode": (
+            "━━━━━━━━━━━━━━━━━━━━━━\n"
+            "🎬 *{series_name}*\n"
+            "🌐 Language: *{language}*\n"
+            "━━━━━━━━━━━━━━━━━━━━━━\n\n"
+            "🍿 Select an episode:"
+        ),
+        "back": "◀️ Back",
         "btn_series": "🎬 Series",
-        "caption_title": "✨ *BEST TURKISH DRAMMAS* ✨",
-        "caption_lang": "Language",
-        "caption_name": "Title",
-        "sending_video": "Sending premium video...",
+        "caption_title": "👑 *BEST TURKISH DRAMMAS* 👑",
+        "caption_lang": "🌐 Language",
+        "caption_name": "📌 Title",
+        "sending_video": "💎 Loading premium video...",
         "btn_other_langs": "🌐 Other languages",
-        "auto_episodes_title": "🎬 Series *{series_name}* (Language: {language})\n\n🍿 Select episode:",
-        "languages": [("Turkish 🇹🇷", "Turkish"), ("English 🇬🇧", "English"), ("Russian 🇷🇺", "Russian"), ("Uzbek 🇺🇿", "Uzbek")],
-        "episode_btn_format": "🍿 Episode {number}",
-        "episode_caption_format": "🔑 *Episode {number}*",
-        "must_subscribe": (
-            "🔒 *To use the bot, please subscribe to our channel!*\n\n"
-            "👇 After subscribing, press the button below:"
+        "auto_episodes_title": (
+            "━━━━━━━━━━━━━━━━━━━━━━\n"
+            "🎬 *{series_name}*\n"
+            "🌐 Language: *{language}*\n"
+            "━━━━━━━━━━━━━━━━━━━━━━\n\n"
+            "🍿 Select an episode:"
         ),
-        "btn_subscribed": "✅ I subscribed",
-        "btn_subscribe": "📢 Go to channel",
-        "not_subscribed": "❌ You haven't subscribed yet! Please subscribe and try again.",
-        "broadcast_done": "✅ Ad sent to {count} users!",
-        "broadcast_hint": "📢 Send your ad message (text, photo, video — any format):"
+        "languages": [("🇹🇷 Turkish", "Turkish"), ("🇬🇧 English", "English"), ("🇷🇺 Russian", "Russian"), ("🇺🇿 Uzbek", "Uzbek")],
+        "episode_btn_format": "🎬 Episode {number}",
+        "episode_caption_format": "🎬 *Episode {number}*",
+        "must_subscribe": (
+            "━━━━━━━━━━━━━━━━━━━━━━\n"
+            "💎 *BEST TURKISH DRAMMAS* 💎\n"
+            "━━━━━━━━━━━━━━━━━━━━━━\n\n"
+            "🔐 To access the bot, please\n"
+            "subscribe to our channel first!\n\n"
+            "✦ Subscribe → Return → Enjoy 🎬\n\n"
+            "👇 Press the button below:"
+        ),
+        "btn_subscribed": "✅ I subscribed — Enter",
+        "btn_subscribe": "💎 Go to channel →",
+        "not_subscribed": "⚠️ You haven't subscribed yet. Please subscribe and try again!",
+        "broadcast_done": "✅ Message sent to {count} users successfully!",
+        "broadcast_hint": "📢 Send your broadcast message:\n_(text, photo, video — any format)_"
     }
 }
 
