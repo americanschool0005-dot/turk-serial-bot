@@ -49,7 +49,7 @@ LOCALIZATION = {
         ),
         "series_menu": "✨ *Best Turkish Drammas* seriallari ro'yxati:",
         "select_lang": "👑 *{series_name}* seriali\n\n🌐 Iltimos, tomosha qilish tilini tanlang:",
-        "no_episodes": "⚠️ *{series_name}* seriali uchun *{language}* tilida hali qismlar joylanmagan.",
+        "no_episodes": "⚠️ *{series_name}* seriali uchun *{language}* tilida hali qismlar joylanmagan. Boshqa tillardan birini tanlang:",
         "select_episode": "🎬 *{series_name}* ({language} tili)\n\n🍿 Qismni tanlang:",
         "back": "⬅️ Orqaga",
         "btn_series": "🎬 Seriallar",
@@ -57,7 +57,9 @@ LOCALIZATION = {
         "caption_lang": "Til",
         "caption_episode": "qism",
         "caption_name": "Sarlavha",
-        "sending_video": "Premium video yuborilmoqda..."
+        "sending_video": "Premium video yuborilmoqda...",
+        "btn_other_langs": "🌐 Boshqa tillar",
+        "auto_episodes_title": "🎬 *{series_name}* ({language} tili)\n\n🍿 Qismni tanlang:"
     },
     "ru": {
         "welcome": (
@@ -69,7 +71,7 @@ LOCALIZATION = {
         ),
         "series_menu": "✨ Список сериалов *Best Turkish Drammas*:",
         "select_lang": "👑 Сериал *{series_name}*\n\n🌐 Пожалуйста, выберите язык просмотра:",
-        "no_episodes": "⚠️ Для сериала *{series_name}* еще нет серий на языке: *{language}*.",
+        "no_episodes": "⚠️ Для сериала *{series_name}* еще нет серий на языке: *{language}*. Пожалуйста, выберите другой язык:",
         "select_episode": "🎬 *{series_name}* (Язык: {language})\n\n🍿 Выберите серию:",
         "back": "⬅️ Назад",
         "btn_series": "🎬 Сериалы",
@@ -77,7 +79,9 @@ LOCALIZATION = {
         "caption_lang": "Язык",
         "caption_episode": "серия",
         "caption_name": "Название",
-        "sending_video": "Отправка премиум видео..."
+        "sending_video": "Отправка премиум видео...",
+        "btn_other_langs": "🌐 Другие языки",
+        "auto_episodes_title": "🎬 Сериал *{series_name}* (Язык: {language})\n\n🍿 Выберите серию:"
     },
     "tr": {
         "welcome": (
@@ -89,7 +93,7 @@ LOCALIZATION = {
         ),
         "series_menu": "✨ *Best Turkish Drammas* dizi listesi:",
         "select_lang": "👑 *{series_name}* dizisi\n\n🌐 Lütfen izlemek istediğiniz dili seçin:",
-        "no_episodes": "⚠️ *{series_name}* dizisi için *{language}* dilinde henüz bölüm yüklenmedi.",
+        "no_episodes": "⚠️ *{series_name}* dizisi için *{language}* dilinde henüz bölüm yüklenmedi. Lütfen başka bir dil seçin:",
         "select_episode": "🎬 *{series_name}* (Dil: {language})\n\n🍿 Bölüm seçin:",
         "back": "⬅️ Geri",
         "btn_series": "🎬 Diziler",
@@ -97,7 +101,9 @@ LOCALIZATION = {
         "caption_lang": "Dil",
         "caption_episode": "bölüm",
         "caption_name": "Başlık",
-        "sending_video": "Premium video gönderiliyor..."
+        "sending_video": "Premium video gönderiliyor...",
+        "btn_other_langs": "🌐 Diğer diller",
+        "auto_episodes_title": "🎬 *{series_name}* dizisi (Dil: {language})\n\n🍿 Bölüm seçin:"
     },
     "en": {
         "welcome": (
@@ -109,7 +115,7 @@ LOCALIZATION = {
         ),
         "series_menu": "✨ *Best Turkish Drammas* series list:",
         "select_lang": "👑 Series *{series_name}*\n\n🌐 Please select your viewing language:",
-        "no_episodes": "⚠️ No episodes loaded in *{language}* for *{series_name}* yet.",
+        "no_episodes": "⚠️ No episodes loaded in *{language}* for *{series_name}* yet. Please select another language:",
         "select_episode": "🎬 *{series_name}* (Language: {language})\n\n🍿 Select episode:",
         "back": "⬅️ Back",
         "btn_series": "🎬 Series",
@@ -132,6 +138,17 @@ def get_lang(user_lang_code: str) -> str:
     if lang.startswith("tr"):
         return "tr"
     return "en"
+
+DB_LANG_MAPPING = {
+    "uz": "Uzbek",
+    "ru": "Russian",
+    "tr": "Turkish",
+    "en": "English"
+}
+
+def get_db_lang(user_lang_code: str) -> str:
+    lang = get_lang(user_lang_code)
+    return DB_LANG_MAPPING.get(lang, "English")
 
 # Reply menu
 def get_main_menu(lang_code: str):
@@ -174,9 +191,49 @@ async def show_series_menu(message: types.Message):
     lang = get_lang(message.from_user.language_code)
     await message.reply(LOCALIZATION[lang]["series_menu"], reply_markup=get_series_keyboard(), parse_mode="Markdown")
 
-# Handle Series Select (Now prompts for language)
+# Handle Series Select (Now automatically selects the user's interface language by default)
 @dp.callback_query(F.data.startswith("series:"))
 async def select_series(callback: types.CallbackQuery):
+    series_id = int(callback.data.split(":")[1])
+    lang = get_lang(callback.from_user.language_code)
+    db_lang = get_db_lang(callback.from_user.language_code)
+    
+    series_list = db.get_all_series()
+    series_name = next((s["name"] for s in series_list if s["id"] == series_id), "Serial")
+    
+    episodes = db.get_all_episodes_for_series(series_id, db_lang)
+    if episodes:
+        # Display episodes directly in user's language
+        builder = InlineKeyboardBuilder()
+        for ep in episodes:
+            builder.button(text=f"🍿 {ep['episode_number']}-{LOCALIZATION[lang]['caption_episode']}", callback_data=f"episode:{ep['id']}")
+        builder.button(text=LOCALIZATION[lang]["btn_other_langs"], callback_data=f"choose_lang:{series_id}")
+        builder.button(text=LOCALIZATION[lang]["back"], callback_data="back_to_series")
+        builder.adjust(2)
+        
+        await callback.message.edit_text(
+            LOCALIZATION[lang]["auto_episodes_title"].format(series_name=series_name, language=db_lang),
+            reply_markup=builder.as_markup(),
+            parse_mode="Markdown"
+        )
+    else:
+        # Fallback: No episodes in user's language, prompt them to choose other languages
+        builder = InlineKeyboardBuilder()
+        languages = [("Turkish 🇹🇷", "Turkish"), ("English 🇬🇧", "English"), ("Russian 🇷🇺", "Russian"), ("Uzbek 🇺🇿", "Uzbek")]
+        for text, l in languages:
+            builder.button(text=text, callback_data=f"lang:{series_id}:{l}")
+        builder.button(text=LOCALIZATION[lang]["back"], callback_data="back_to_series")
+        builder.adjust(2)
+        
+        await callback.message.edit_text(
+            LOCALIZATION[lang]["no_episodes"].format(series_name=series_name, language=db_lang),
+            reply_markup=builder.as_markup(),
+            parse_mode="Markdown"
+        )
+
+# Handle Manual Language Choice Menu
+@dp.callback_query(F.data.startswith("choose_lang:"))
+async def choose_lang(callback: types.CallbackQuery):
     series_id = int(callback.data.split(":")[1])
     series_list = db.get_all_series()
     series_name = next((s["name"] for s in series_list if s["id"] == series_id), "Serial")
@@ -195,7 +252,7 @@ async def select_series(callback: types.CallbackQuery):
         parse_mode="Markdown"
     )
 
-# Handle back to languages
+# Handle back to manual languages selection
 @dp.callback_query(F.data.startswith("back_to_langs:"))
 async def back_to_langs(callback: types.CallbackQuery):
     series_id = int(callback.data.split(":")[1])
@@ -216,7 +273,7 @@ async def back_to_langs(callback: types.CallbackQuery):
         parse_mode="Markdown"
     )
 
-# Handle Language Select (Displays episodes available in that language)
+# Handle Manual Language Select (Displays episodes available in that chosen language)
 @dp.callback_query(F.data.startswith("lang:"))
 async def select_language(callback: types.CallbackQuery):
     parts = callback.data.split(":")
@@ -242,7 +299,7 @@ async def select_language(callback: types.CallbackQuery):
     for ep in episodes:
         builder.button(text=f"🍿 {ep['episode_number']}-{LOCALIZATION[lang]['caption_episode']}", callback_data=f"episode:{ep['id']}")
     builder.button(text=LOCALIZATION[lang]["back"], callback_data=f"back_to_langs:{series_id}")
-    builder.adjust(2) # 2 columns for cleaner large buttons
+    builder.adjust(2)
     
     await callback.message.edit_text(
         LOCALIZATION[lang]["select_episode"].format(series_name=series_name, language=language),
