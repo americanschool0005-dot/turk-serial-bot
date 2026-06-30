@@ -59,7 +59,8 @@ LOCALIZATION = {
         "caption_name": "Sarlavha",
         "sending_video": "Premium video yuborilmoqda...",
         "btn_other_langs": "🌐 Boshqa tillar",
-        "auto_episodes_title": "🎬 *{series_name}* ({language} tili)\n\n🍿 Qismni tanlang:"
+        "auto_episodes_title": "🎬 *{series_name}* ({language} tili)\n\n🍿 Qismni tanlang:",
+        "languages": [("Turkcha 🇹🇷", "Turkish"), ("Inglizcha 🇬🇧", "English"), ("Ruscha 🇷🇺", "Russian"), ("O'zbekcha 🇺🇿", "Uzbek")]
     },
     "ru": {
         "welcome": (
@@ -81,7 +82,8 @@ LOCALIZATION = {
         "caption_name": "Название",
         "sending_video": "Отправка премиум видео...",
         "btn_other_langs": "🌐 Другие языки",
-        "auto_episodes_title": "🎬 Сериал *{series_name}* (Язык: {language})\n\n🍿 Выберите серию:"
+        "auto_episodes_title": "🎬 Сериал *{series_name}* (Язык: {language})\n\n🍿 Выберите серию:",
+        "languages": [("Турецкий 🇹🇷", "Turkish"), ("Английский 🇬🇧", "English"), ("Русский 🇷🇺", "Russian"), ("Узбекский 🇺🇿", "Uzbek")]
     },
     "tr": {
         "welcome": (
@@ -103,7 +105,8 @@ LOCALIZATION = {
         "caption_name": "Başlık",
         "sending_video": "Premium video gönderiliyor...",
         "btn_other_langs": "🌐 Diğer diller",
-        "auto_episodes_title": "🎬 *{series_name}* dizisi (Dil: {language})\n\n🍿 Bölüm seçin:"
+        "auto_episodes_title": "🎬 *{series_name}* dizisi (Dil: {language})\n\n🍿 Bölüm seçin:",
+        "languages": [("Türkçe 🇹🇷", "Turkish"), ("İngilizce 🇬🇧", "English"), ("Rusça 🇷🇺", "Russian"), ("Özbekçe 🇺🇿", "Uzbek")]
     },
     "en": {
         "welcome": (
@@ -123,7 +126,10 @@ LOCALIZATION = {
         "caption_lang": "Language",
         "caption_episode": "episode",
         "caption_name": "Title",
-        "sending_video": "Sending premium video..."
+        "sending_video": "Sending premium video...",
+        "btn_other_langs": "🌐 Other languages",
+        "auto_episodes_title": "🎬 Series *{series_name}* (Language: {language})\n\n🍿 Select episode:",
+        "languages": [("Turkish 🇹🇷", "Turkish"), ("English 🇬🇧", "English"), ("Russian 🇷🇺", "Russian"), ("Uzbek 🇺🇿", "Uzbek")]
     }
 }
 
@@ -219,8 +225,7 @@ async def select_series(callback: types.CallbackQuery):
     else:
         # Fallback: No episodes in user's language, prompt them to choose other languages
         builder = InlineKeyboardBuilder()
-        languages = [("Turkish 🇹🇷", "Turkish"), ("English 🇬🇧", "English"), ("Russian 🇷🇺", "Russian"), ("Uzbek 🇺🇿", "Uzbek")]
-        for text, l in languages:
+        for text, l in LOCALIZATION[lang]["languages"]:
             builder.button(text=text, callback_data=f"lang:{series_id}:{l}")
         builder.button(text=LOCALIZATION[lang]["back"], callback_data="back_to_series")
         builder.adjust(2)
@@ -240,8 +245,7 @@ async def choose_lang(callback: types.CallbackQuery):
     lang = get_lang(callback.from_user.language_code)
     
     builder = InlineKeyboardBuilder()
-    languages = [("Turkish 🇹🇷", "Turkish"), ("English 🇬🇧", "English"), ("Russian 🇷🇺", "Russian"), ("Uzbek 🇺🇿", "Uzbek")]
-    for text, l in languages:
+    for text, l in LOCALIZATION[lang]["languages"]:
         builder.button(text=text, callback_data=f"lang:{series_id}:{l}")
     builder.button(text=LOCALIZATION[lang]["back"], callback_data="back_to_series")
     builder.adjust(2)
@@ -261,8 +265,7 @@ async def back_to_langs(callback: types.CallbackQuery):
     lang = get_lang(callback.from_user.language_code)
     
     builder = InlineKeyboardBuilder()
-    languages = [("Turkish 🇹🇷", "Turkish"), ("English 🇬🇧", "English"), ("Russian 🇷🇺", "Russian"), ("Uzbek 🇺🇿", "Uzbek")]
-    for text, l in languages:
+    for text, l in LOCALIZATION[lang]["languages"]:
         builder.button(text=text, callback_data=f"lang:{series_id}:{l}")
     builder.button(text=LOCALIZATION[lang]["back"], callback_data="back_to_series")
     builder.adjust(2)
