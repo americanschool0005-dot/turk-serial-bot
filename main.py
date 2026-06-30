@@ -12,6 +12,7 @@ import database as db
 load_dotenv()
 API_TOKEN = os.getenv("BOT_TOKEN")
 ADMIN_ID = os.getenv("ADMIN_ID")
+CHANNEL_ID = os.getenv("CHANNEL_ID", "")  # e.g. @my_channel or -100123456789
 
 if not API_TOKEN:
     print("XATOLIK: BOT_TOKEN topilmadi!")
@@ -37,7 +38,7 @@ class AddSeriesStates(StatesGroup):
     waiting_for_video = State()
     waiting_for_title = State()
 
-# Localization dictionaries
+# ── Localization dictionaries ────────────────────────────────────────────────
 LOCALIZATION = {
     "uz": {
         "welcome": (
@@ -55,12 +56,22 @@ LOCALIZATION = {
         "btn_series": "🎬 Seriallar",
         "caption_title": "✨ *BEST TURKISH DRAMMAS* ✨",
         "caption_lang": "Til",
-        "caption_episode": "qism",
         "caption_name": "Sarlavha",
         "sending_video": "Premium video yuborilmoqda...",
         "btn_other_langs": "🌐 Boshqa tillar",
         "auto_episodes_title": "🎬 *{series_name}* ({language} tili)\n\n🍿 Qismni tanlang:",
-        "languages": [("Turkcha 🇹🇷", "Turkish"), ("Inglizcha 🇬🇧", "English"), ("Ruscha 🇷🇺", "Russian"), ("O'zbekcha 🇺🇿", "Uzbek")]
+        "languages": [("Turkcha 🇹🇷", "Turkish"), ("Inglizcha 🇬🇧", "English"), ("Ruscha 🇷🇺", "Russian"), ("O'zbekcha 🇺🇿", "Uzbek")],
+        "episode_btn_format": "🍿 {number}-qism",
+        "episode_caption_format": "🔑 *{number}-qism*",
+        "must_subscribe": (
+            "🔒 *Botdan foydalanish uchun kanalimizga obuna bo'ling!*\n\n"
+            "👇 Obuna bo'lgandan so'ng, quyidagi tugmani bosing:"
+        ),
+        "btn_subscribed": "✅ Obuna bo'ldim",
+        "btn_subscribe": "📢 Kanalga o'tish",
+        "not_subscribed": "❌ Siz hali kanalga obuna bo'lmadingiz! Iltimos obuna bo'lib, qayta bosing.",
+        "broadcast_done": "✅ Reklama {count} ta foydalanuvchiga yuborildi!",
+        "broadcast_hint": "📢 Reklama xabarini yuboring (matn, rasm, video - istalgan format):"
     },
     "ru": {
         "welcome": (
@@ -78,12 +89,22 @@ LOCALIZATION = {
         "btn_series": "🎬 Сериалы",
         "caption_title": "✨ *BEST TURKISH DRAMMAS* ✨",
         "caption_lang": "Язык",
-        "caption_episode": "серия",
         "caption_name": "Название",
         "sending_video": "Отправка премиум видео...",
         "btn_other_langs": "🌐 Другие языки",
         "auto_episodes_title": "🎬 Сериал *{series_name}* (Язык: {language})\n\n🍿 Выберите серию:",
-        "languages": [("Турецкий 🇹🇷", "Turkish"), ("Английский 🇬🇧", "English"), ("Русский 🇷🇺", "Russian"), ("Узбекский 🇺🇿", "Uzbek")]
+        "languages": [("Турецкий 🇹🇷", "Turkish"), ("Английский 🇬🇧", "English"), ("Русский 🇷🇺", "Russian"), ("Узбекский 🇺🇿", "Uzbek")],
+        "episode_btn_format": "🍿 {number} серия",
+        "episode_caption_format": "🔑 *{number} серия*",
+        "must_subscribe": (
+            "🔒 *Для использования бота подпишитесь на наш канал!*\n\n"
+            "👇 После подписки нажмите кнопку ниже:"
+        ),
+        "btn_subscribed": "✅ Я подписался",
+        "btn_subscribe": "📢 Перейти в канал",
+        "not_subscribed": "❌ Вы ещё не подписаны на канал! Подпишитесь и нажмите снова.",
+        "broadcast_done": "✅ Реклама отправлена {count} пользователям!",
+        "broadcast_hint": "📢 Отправьте рекламное сообщение (текст, фото, видео — любой формат):"
     },
     "tr": {
         "welcome": (
@@ -101,12 +122,22 @@ LOCALIZATION = {
         "btn_series": "🎬 Diziler",
         "caption_title": "✨ *BEST TURKISH DRAMMAS* ✨",
         "caption_lang": "Dil",
-        "caption_episode": "bölüm",
         "caption_name": "Başlık",
         "sending_video": "Premium video gönderiliyor...",
         "btn_other_langs": "🌐 Diğer diller",
         "auto_episodes_title": "🎬 *{series_name}* dizisi (Dil: {language})\n\n🍿 Bölüm seçin:",
-        "languages": [("Türkçe 🇹🇷", "Turkish"), ("İngilizce 🇬🇧", "English"), ("Rusça 🇷🇺", "Russian"), ("Özbekçe 🇺🇿", "Uzbek")]
+        "languages": [("Türkçe 🇹🇷", "Turkish"), ("İngilizce 🇬🇧", "English"), ("Rusça 🇷🇺", "Russian"), ("Özbekçe 🇺🇿", "Uzbek")],
+        "episode_btn_format": "🍿 {number}. Bölüm",
+        "episode_caption_format": "🔑 *{number}. Bölüm*",
+        "must_subscribe": (
+            "🔒 *Botu kullanmak için kanalımıza abone olun!*\n\n"
+            "👇 Abone olduktan sonra aşağıdaki butona basın:"
+        ),
+        "btn_subscribed": "✅ Abone oldum",
+        "btn_subscribe": "📢 Kanala git",
+        "not_subscribed": "❌ Henüz kanala abone olmadınız! Lütfen abone olup tekrar deneyin.",
+        "broadcast_done": "✅ Reklam {count} kullanıcıya gönderildi!",
+        "broadcast_hint": "📢 Reklam mesajını gönderin (metin, fotoğraf, video — herhangi bir format):"
     },
     "en": {
         "welcome": (
@@ -124,12 +155,22 @@ LOCALIZATION = {
         "btn_series": "🎬 Series",
         "caption_title": "✨ *BEST TURKISH DRAMMAS* ✨",
         "caption_lang": "Language",
-        "caption_episode": "episode",
         "caption_name": "Title",
         "sending_video": "Sending premium video...",
         "btn_other_langs": "🌐 Other languages",
         "auto_episodes_title": "🎬 Series *{series_name}* (Language: {language})\n\n🍿 Select episode:",
-        "languages": [("Turkish 🇹🇷", "Turkish"), ("English 🇬🇧", "English"), ("Russian 🇷🇺", "Russian"), ("Uzbek 🇺🇿", "Uzbek")]
+        "languages": [("Turkish 🇹🇷", "Turkish"), ("English 🇬🇧", "English"), ("Russian 🇷🇺", "Russian"), ("Uzbek 🇺🇿", "Uzbek")],
+        "episode_btn_format": "🍿 Episode {number}",
+        "episode_caption_format": "🔑 *Episode {number}*",
+        "must_subscribe": (
+            "🔒 *To use the bot, please subscribe to our channel!*\n\n"
+            "👇 After subscribing, press the button below:"
+        ),
+        "btn_subscribed": "✅ I subscribed",
+        "btn_subscribe": "📢 Go to channel",
+        "not_subscribed": "❌ You haven't subscribed yet! Please subscribe and try again.",
+        "broadcast_done": "✅ Ad sent to {count} users!",
+        "broadcast_hint": "📢 Send your ad message (text, photo, video — any format):"
     }
 }
 
@@ -156,6 +197,26 @@ def get_db_lang(user_lang_code: str) -> str:
     lang = get_lang(user_lang_code)
     return DB_LANG_MAPPING.get(lang, "English")
 
+# ── Subscription check ────────────────────────────────────────────────────────
+async def is_subscribed(user_id: int) -> bool:
+    """Returns True if CHANNEL_ID is not set or user is already a member."""
+    if not CHANNEL_ID:
+        return True
+    try:
+        member = await bot.get_chat_member(CHANNEL_ID, user_id)
+        return member.status not in ("left", "kicked")
+    except Exception:
+        return True  # if we can't check, allow access
+
+def subscribe_keyboard(lang: str) -> types.InlineKeyboardMarkup:
+    builder = InlineKeyboardBuilder()
+    if CHANNEL_ID:
+        channel_link = f"https://t.me/{CHANNEL_ID.lstrip('@')}" if CHANNEL_ID.startswith("@") else f"https://t.me/c/{str(CHANNEL_ID).lstrip('-100')}"
+        builder.button(text=LOCALIZATION[lang]["btn_subscribe"], url=channel_link)
+    builder.button(text=LOCALIZATION[lang]["btn_subscribed"], callback_data="check_subscription")
+    builder.adjust(1)
+    return builder.as_markup()
+
 # Reply menu
 def get_main_menu(lang_code: str):
     lang = get_lang(lang_code)
@@ -178,6 +239,18 @@ async def start_cmd(message: types.Message):
     user_id = message.from_user.id
     lang = get_lang(message.from_user.language_code)
     
+    # Save user to DB for broadcast
+    db.save_user(user_id)
+    
+    # Check mandatory subscription
+    if not await is_subscribed(user_id):
+        await message.answer(
+            LOCALIZATION[lang]["must_subscribe"],
+            reply_markup=subscribe_keyboard(lang),
+            parse_mode="Markdown"
+        )
+        return
+    
     # Send the localized bottom reply menu first to register the keyboard
     await message.answer("🍿", reply_markup=get_main_menu(message.from_user.language_code))
     
@@ -186,14 +259,46 @@ async def start_cmd(message: types.Message):
         welcome += (
             "\n\n🛠 *Admin paneli buyruqlari:*\n"
             "• /add\\_series - Yangi serial qismini yuklash\n"
-            "• /add\\_admin `<user_id>` - Yangi admin qo'shish"
+            "• /add\\_admin `<user_id>` - Yangi admin qo'shish\n"
+            "• /broadcast - Barcha foydalanuvchilarga reklama yuborish"
         )
     # Send welcome text and show the inline series keyboard directly!
     await message.reply(welcome, reply_markup=get_series_keyboard(), parse_mode="Markdown")
 
+# ── Check subscription callback ───────────────────────────────────────────────
+@dp.callback_query(F.data == "check_subscription")
+async def check_sub_callback(callback: types.CallbackQuery):
+    lang = get_lang(callback.from_user.language_code)
+    user_id = callback.from_user.id
+    db.save_user(user_id)
+    
+    if await is_subscribed(user_id):
+        # Show main menu
+        await callback.message.delete()
+        await callback.message.answer("🍿", reply_markup=get_main_menu(callback.from_user.language_code))
+        welcome = LOCALIZATION[lang]["welcome"]
+        if db.is_admin(user_id):
+            welcome += (
+                "\n\n🛠 *Admin paneli buyruqlari:*\n"
+                "• /add\\_series - Yangi serial qismini yuklash\n"
+                "• /add\\_admin `<user_id>` - Yangi admin qo'shish\n"
+                "• /broadcast - Barcha foydalanuvchilarga reklama yuborish"
+            )
+        await callback.message.answer(welcome, reply_markup=get_series_keyboard(), parse_mode="Markdown")
+    else:
+        await callback.answer(LOCALIZATION[lang]["not_subscribed"], show_alert=True)
+
 # Handle Reply Button
 @dp.message(F.text.in_({"🎬 Seriallar", "🎬 Сериалы", "🎬 Diziler", "🎬 Series"}))
 async def show_series_menu(message: types.Message):
+    lang = get_lang(message.from_user.language_code)
+    if not await is_subscribed(message.from_user.id):
+        await message.answer(
+            LOCALIZATION[lang]["must_subscribe"],
+            reply_markup=subscribe_keyboard(lang),
+            parse_mode="Markdown"
+        )
+        return
     lang = get_lang(message.from_user.language_code)
     await message.reply(LOCALIZATION[lang]["series_menu"], reply_markup=get_series_keyboard(), parse_mode="Markdown")
 
@@ -212,7 +317,7 @@ async def select_series(callback: types.CallbackQuery):
         # Display episodes directly in user's language
         builder = InlineKeyboardBuilder()
         for ep in episodes:
-            builder.button(text=f"🍿 {ep['episode_number']}-{LOCALIZATION[lang]['caption_episode']}", callback_data=f"episode:{ep['id']}")
+            builder.button(text=btn_text, callback_data=f"episode:{ep['id']}")
         builder.button(text=LOCALIZATION[lang]["btn_other_langs"], callback_data=f"choose_lang:{series_id}")
         builder.button(text=LOCALIZATION[lang]["back"], callback_data="back_to_series")
         builder.adjust(2)
@@ -300,7 +405,8 @@ async def select_language(callback: types.CallbackQuery):
         
     builder = InlineKeyboardBuilder()
     for ep in episodes:
-        builder.button(text=f"🍿 {ep['episode_number']}-{LOCALIZATION[lang]['caption_episode']}", callback_data=f"episode:{ep['id']}")
+        btn_text = LOCALIZATION[lang]['episode_btn_format'].format(number=ep['episode_number'])
+        builder.button(text=btn_text, callback_data=f"episode:{ep['id']}")
     builder.button(text=LOCALIZATION[lang]["back"], callback_data=f"back_to_langs:{series_id}")
     builder.adjust(2)
     
@@ -326,7 +432,7 @@ async def select_episode(callback: types.CallbackQuery):
     caption = (
         f"{LOCALIZATION[lang]['caption_title']}\n\n"
         f"🎬 *{series_name}*\n"
-        f"🔑 *{episode_number}-{LOCALIZATION[lang]['caption_episode']}*\n"
+        f"{LOCALIZATION[lang]['episode_caption_format'].format(number=episode_number)}\n"
         f"🌐 *{LOCALIZATION[lang]['caption_lang']}:* {language}"
     )
     if title:
@@ -341,7 +447,37 @@ async def back_to_series(callback: types.CallbackQuery):
     lang = get_lang(callback.from_user.language_code)
     await callback.message.edit_text(LOCALIZATION[lang]["series_menu"], reply_markup=get_series_keyboard(), parse_mode="Markdown")
 
-# --- Admin Handlers ---
+# ── Admin Handlers ───────────────────────────────────────────────────────────
+
+# Broadcast / Reklama
+class BroadcastState(StatesGroup):
+    waiting_message = State()
+
+@dp.message(Command("broadcast"))
+async def broadcast_cmd(message: types.Message, state: FSMContext):
+    if not db.is_admin(message.from_user.id):
+        return
+    lang = get_lang(message.from_user.language_code)
+    await state.set_state(BroadcastState.waiting_message)
+    await message.reply(LOCALIZATION[lang]["broadcast_hint"])
+
+@dp.message(BroadcastState.waiting_message)
+async def broadcast_send(message: types.Message, state: FSMContext):
+    if not db.is_admin(message.from_user.id):
+        return
+    lang = get_lang(message.from_user.language_code)
+    await state.clear()
+    
+    users = db.get_all_users()
+    sent = 0
+    for uid in users:
+        try:
+            await message.copy_to(uid)
+            sent += 1
+        except Exception:
+            pass  # user may have blocked the bot
+    
+    await message.reply(LOCALIZATION[lang]["broadcast_done"].format(count=sent))
 
 @dp.message(Command("add_admin"))
 async def add_admin_cmd(message: types.Message):
@@ -437,7 +573,8 @@ async def process_title(message: types.Message, state: FSMContext):
 
 async def main():
     await bot.set_my_commands([
-        types.BotCommand(command="start", description="Botni qayta ishga tushirish (Seriallar)")
+        types.BotCommand(command="start", description="Botni qayta ishga tushirish (Seriallar)"),
+        types.BotCommand(command="broadcast", description="📢 Reklama yuborish (faqat admin)")
     ])
     await dp.start_polling(bot)
 
