@@ -180,7 +180,7 @@ async def start_cmd(message: types.Message):
         welcome += (
             "\n\n🛠 *Admin paneli buyruqlari:*\n"
             "• /add\\_series - Yangi serial qismini yuklash\n"
-            "• /add\\_admin <user_id> - Yangi admin qo'shish"
+            "• /add\\_admin `<user_id>` - Yangi admin qo'shish"
         )
     # Send welcome text and show the inline series keyboard directly!
     await message.reply(welcome, reply_markup=get_series_keyboard(), parse_mode="Markdown")
