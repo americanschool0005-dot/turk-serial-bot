@@ -46,7 +46,7 @@ LOCALIZATION = {
             "👑 *BEST TURKISH DRAMMAS* 👑\n"
             "━━━━━━━━━━━━━━━━━━━━━━\n\n"
             "🌹 Xush kelibsiz, hurmatli mehmon!\n\n"
-            "🎭 Siz turk seriallarining *eng noyob va hashamatli* kolleksiyasiga qadim qo'ydingiz.\n\n"
+            "🎭 Siz turk seriallarining *eng noyob va hashamatli* kolleksiyasiga qadam qo'ydingiz.\n\n"
             "🌐 ✦ *Til avtomatik aniqlandi:* O'zbek tili\n\n"
             "💎 *Premium sifat · HD · Eng sara seriallar*\n\n"
             "━━━━━━━━━━━━━━━━━━━━━━\n"
